@@ -44,6 +44,10 @@ class ExplodeAppTask extends DefaultTask implements Explodable {
                 File warDestination = new File(war.canonicalPath.substring(0, war.canonicalPath.length() - 4))
                 Files.createDirectory(warDestination.toPath())
                 ant.unzip(src: war, dest: warDestination)
+                def appXml = new File(getExplodedAppDirectory(), 'META-INF/application.xml')
+                if (appXml.exists()) {
+                    appXml.text = appXml.text.replace("<web-uri>${war.name}</web-uri>", "<web-uri>${warDestination.name}</web-uri>")                    
+                }
             }
         }
     }
